@@ -4,6 +4,9 @@ import cgitb
 import codecs
 import os
 import sys
+import sqlite3
+import time
+import re
 
 import github
 
@@ -33,6 +36,15 @@ if __name__ == '__main__':
         mod_info = form['modinfo'].value
     except KeyError:
         pass
+
+    # 邮箱获取
+    email_in = form['email'].value
+    # 邮箱后端校验，防止 SQL 注入攻击
+    email_match = re.findall(r'^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$', email_in)
+    if len(email_match) > 0:
+        email = email_match[0]
+    else:
+        email = 'null@null.nul'
 
     # 问题本体
     body = form['body'].value
@@ -71,6 +83,37 @@ if __name__ == '__main__':
 
     # 得到反馈的网址
     html_url = issue.html_url
+
+    # 数据存储，一来对问题进一步回溯，二来防止有人捣乱
+    ip = os.getenv('REMOTE_ADDR')
+    time_index = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+    # 开始连接数据库，存储位置为上级文件夹，那么外部无法访问到
+    conn = sqlite3.connect('../issues.db')
+
+    # 创建游标
+    cursor = conn.cursor()
+
+    # 不存在表时，创建表
+    cursor.execute(
+        'CREATE TABLE IF NOT EXISTS ISSUES '
+        '(TIME TEXT PRIMARY KEY NOT NULL, '
+        'EMAIL TEXT NOT NULL, '
+        'IP TEXT NOT NULL, '
+        'URL TEXT NOT NULL);')
+    conn.commit()
+
+    # 开始执行数据存储，出现错误则回滚
+    try:
+        cursor.execute("INSERT INTO ISSUES "
+                       "(TIME, EMAIL, IP, URL) "
+                       "VALUES ('{}', '{}', '{}', '{}')".format(time_index, email, ip, html_url))
+        conn.commit()
+    except sqlite3.Error:
+        conn.rollback()
+
+    # 关闭数据库
+    conn.close()
 
     # cgi 默认输出似乎是系统编码，这里得强制指定下，虽然最后服务器会在 linux 系统上
     sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer)
