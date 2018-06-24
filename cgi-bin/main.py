@@ -3,12 +3,16 @@ import cgi
 import cgitb
 import codecs
 import os
-import sys
-import sqlite3
-import time
 import re
+import sqlite3
+import sys
+import time
 
 import github
+from geetest import GeetestLib
+
+captcha_id = os.getenv('GEETEST_ID')
+private_key = os.getenv('GEETEST_KEY')
 
 if __name__ == '__main__':
     # 启用 cgi 的错误提示机制，更容易排错
@@ -16,6 +20,34 @@ if __name__ == '__main__':
 
     # 获取玩家丢来的数据
     form = cgi.FieldStorage()
+
+    # 先进行极验验证
+    gt = GeetestLib(captcha_id, private_key)
+
+    # 通过用户表单提交数据，获取对应值
+    challenge = form[gt.FN_CHALLENGE].value
+    validate = form[gt.FN_VALIDATE].value
+    seccode = form[gt.FN_SECCODE].value
+
+    # 读取用户 cookies 里面的 status 和 user_id
+    # 是的，没有轮子可以用，只能自己造
+    cookies = {}
+    for cookie in os.getenv('HTTP_COOKIE').split('; '):
+        cookie = cookie.split('=')
+        cookies[cookie[0]] = cookie[1]
+    status = cookies[gt.GT_STATUS_SESSION_KEY]
+    user_id = cookies['user_id']
+
+    # 通过状态判定极验服务器是否宕机，如果没有宕机，执行上面方案
+    # result：值为 1 或 0
+    # 1 表示验证成功，0 表示失败
+    if status:
+        result = gt.success_validate(challenge, validate, seccode, user_id)
+    else:
+        result = gt.failback_validate(challenge, validate, seccode)
+
+    # 断言（什么？你说给为什么不给玩家返回一个验证码错误的提示界面？）
+    assert result == 1
 
     # 标题获取
     title = form['title'].value
@@ -89,7 +121,7 @@ if __name__ == '__main__':
     time_index = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
     # 开始连接数据库，存储位置为上级文件夹，那么外部无法访问到
-    conn = sqlite3.connect('../issues.db')
+    conn = sqlite3.connect('../database/issues.db')
 
     # 创建游标
     cursor = conn.cursor()

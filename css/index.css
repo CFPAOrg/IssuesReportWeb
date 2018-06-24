@@ -86,3 +86,6 @@ textarea:placeholder-shown,
     transition: 0.3s ease-in-out;
 }
 
+.container {
+    margin-bottom: 3rem;
+}
