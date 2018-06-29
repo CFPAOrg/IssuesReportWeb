@@ -82,7 +82,7 @@ if __name__ == '__main__':
     body = form['body'].value
 
     # 读取返回的网页文件
-    with open('./return.html', 'r', encoding='utf-8') as f:
+    with open('../return.html', 'r', encoding='utf-8') as f:
         html = []
         for i in f.readlines():
             html.append(i)
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     time_index = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
     # 开始连接数据库，存储位置为上级文件夹，那么外部无法访问到
-    conn = sqlite3.connect('../database/issues.db')
+    conn = sqlite3.connect('../../database/issues.db')
 
     # 创建游标
     cursor = conn.cursor()
