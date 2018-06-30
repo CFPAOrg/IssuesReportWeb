@@ -24,7 +24,11 @@
     <div class="container">
         <!-- 标题 -->
         <div class="page-header">
-            <h1><i class="fa fa-bug"></i> 模组翻译问题反馈<br><small>—— 感谢您的意见和建议 ——</small></h1>
+            <h1>
+                <i class="fa fa-bug"></i> 模组翻译问题反馈
+                <br>
+                <small>—— 感谢您的意见和建议 ——</small>
+            </h1>
         </div>
         <!-- 表单 -->
         <div class="row">
@@ -34,34 +38,57 @@
             <div class="col-md-8">
                 <form role="form" id="mainForm" action="/cgi-bin/main.py" method="post">
                     <div class="form-group">
-                        <label for="name">问题标题</label> <span class="label label-warning">必填</span>
+                        <label for="name">问题标题</label>
+                        <span class="label label-warning">必填</span>
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-address-card-o fa-fw"></i></span>
-                            <input type="text" class="form-control" required="required" name="title" onfocus="style.backgroundColor='#fcf8c0'" onblur="style.backgroundColor='#ededed'" placeholder="比如：“模组翻译错误”、“模组翻译缺失”">
+                            <span class="input-group-addon">
+                                <i class="fa fa-address-card-o fa-fw"></i>
+                            </span>
+                            <input type="text" class="form-control" required="required" name="title" onfocus="style.backgroundColor='#fcf8c0'" onblur="style.backgroundColor='#ededed'"
+                                placeholder="比如：“模组翻译错误”、“模组翻译缺失”">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="name">问题标签</label> <span class="label label-success">可选</span><br>
-                        <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox" value="tags1"> 翻译错误</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox" value="tags2"> 翻译缺失</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="inlineCheckbox" value="tags3"> 其他问题</label>
+                        <label for="name">问题标签</label>
+                        <span class="label label-success">可选</span>
+                        <br>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="inlineCheckbox" value="tags1"> 翻译错误</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="inlineCheckbox" value="tags2"> 翻译缺失</label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="inlineCheckbox" value="tags3"> 其他问题</label>
                     </div>
                     <div class="form-group">
-                        <label for="name">有问题模组信息</label> <span class="label label-success">可选</span>
-                        <textarea class="form-control" name="modinfo" rows="4" onfocus="style.backgroundColor='#f2eba0'" onblur="style.backgroundColor='#fcf8c0'" placeholder="之前程序自动复制了你指向物品的模组信息，在此处只需要右击此处，选择粘贴即可。&#x0a;如果一个模组出现了多个错误，只需要反馈其中一个物品，而后在下面的反馈内容中说明即可。"></textarea>
+                        <label for="name">有问题模组信息</label>
+                        <span class="label label-success">可选</span>
+                        <textarea class="form-control" name="modinfo" rows="4" onfocus="style.backgroundColor='#f2eba0'" onblur="style.backgroundColor='#fcf8c0'"
+                            placeholder="之前程序自动复制了你指向物品的模组信息，在此处只需要右击此处，选择粘贴即可。&#x0a;如果一个模组出现了多个错误，只需要反馈其中一个物品，而后在下面的反馈内容中说明即可。"></textarea>
                     </div>
                     <div class="form-group margin-bottom-sm">
-                        <label for="name">邮箱（不会公开）</label> <span class="label label-warning">必填</span>
+                        <label for="name">邮箱（不会公开）</label>
+                        <span class="label label-warning">必填</span>
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-                            <input type="text" class="form-control" required="required" pattern="^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$" name="email" onfocus="style.backgroundColor='#fcf8c0'" onblur="style.backgroundColor='#ededed'" placeholder="bakabaka943@163.com">
+                            <span class="input-group-addon">
+                                <i class="fa fa-envelope-o fa-fw"></i>
+                            </span>
+                            <input type="text" class="form-control" required="required" pattern="^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$"
+                                name="email" onfocus="style.backgroundColor='#fcf8c0'" onblur="style.backgroundColor='#ededed'"
+                                placeholder="bakabaka943@163.com">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="name">反馈内容</label> <span class="label label-warning">必填</span><button type="button" class="btn btn-default pull-right pull-bottom" onClick="run()"><i class="fa fa-code"></i> Markdown 预览</button>
-                        <textarea class="form-control" id="body" name="body" rows="5" required="required" onfocus="style.backgroundColor='#fcf8c0'" onblur="style.backgroundColor='#ededed'" placeholder="具体的反馈内容，支持 Markdown 语法，点击右上侧按钮即可预览样式"></textarea>
-                        <!-- 点击按钮后渲染的 Markdown 页面块 -->
-                        <div id="MDOut"></div>
+                        <label for="name">反馈内容</label>
+                        <span class="label label-warning">必填</span>
+                        <button type="button" class="btn btn-default pull-right pull-bottom" onClick="run()">
+                            <i class="fa fa-code"></i> 已开启 Markdown 预览</button>
+                        <div class="markdown-group">
+                            <textarea class="form-control" id="body" name="body" rows="5" required="required" onfocus="style.backgroundColor='#fcf8c0'"
+                                onblur="style.backgroundColor='#ededed'" placeholder="具体的反馈内容，支持 Markdown 语法，点击右上侧按钮即可预览样式"></textarea>
+                            <!-- 点击按钮后渲染的 Markdown 页面块 -->
+                            <div style="width: 2%"></div>
+                            <div id="MDOut"></div>
+                        </div>
                     </div>
                     <div class="form-group" id="geetestGui"></div>
                     <button type="submit" class="btn btn-info btn-block" id="submitButton">提交</button>
