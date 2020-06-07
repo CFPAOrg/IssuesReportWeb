@@ -1,2 +1,2 @@
-pygithub == 1.39
+pygithub == 1.51
 requests == 2.19.1
